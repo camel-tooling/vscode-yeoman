@@ -1,8 +1,9 @@
 {
   "name": "yo",
-  "version": "0.9.3",
+  "version": "0.9.4",
   "description": "Scaffold projects using Yeoman.",
   "license": "MIT",
+  "publisher": "camel-tooling",
   "repository": {
     "type": "git",
     "url": "https://github.com/SamVerschueren/vscode-yo"
@@ -15,20 +16,25 @@
     "email": "sam.verschueren@gmail.com",
     "url": "github.com/SamVerschueren"
   },
-  "publisher": "samverschueren",
+  "maintainers": [
+    {
+      "name": "Brian Fitzpatrick",
+      "email": "bfitzpat@redhat.com"
+    }
+  ],  
   "icon": "icon.png",
   "engines": {
     "vscode": "^1.6.0"
   },
   "activationEvents": [
-    "onCommand:yo"
+    "onCommand:yeoman"
   ],
   "main": "./out/extension",
   "contributes": {
     "commands": [
       {
-        "command": "yo",
-        "title": "yo"
+        "command": "yeoman",
+        "title": "yeoman"
       }
     ]
   },
