@@ -2,6 +2,7 @@
 
 > Scaffold projects using [Yeoman](http://yeoman.io/).
 
+This project is forked from the https://github.com/SamVerschueren/vscode-yo project upstream.
 
 ## Usage
 
@@ -24,5 +25,5 @@ generators will pop-up. The default generator is marked by a ★.
 
 ## License
 
-MIT © [Sam Verschueren](http://github.com/SamVerschueren)
+MIT © [Sam Verschueren](http://github.com/SamVerschueren) for initial code at https://github.com/SamVerschueren/vscode-yo
 MIT © [bfitzpat](http://github.com/bfitzpat)
