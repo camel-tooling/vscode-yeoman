@@ -1,6 +1,6 @@
 {
   "name": "yo",
-  "version": "0.9.4",
+  "version": "0.9.5",
   "description": "Scaffold projects using Yeoman.",
   "license": "MIT",
   "publisher": "camel-tooling",
@@ -21,7 +21,7 @@
       "name": "Brian Fitzpatrick",
       "email": "bfitzpat@redhat.com"
     }
-  ],  
+  ],
   "icon": "icon.png",
   "engines": {
     "vscode": "^1.6.0"
