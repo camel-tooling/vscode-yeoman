@@ -2,7 +2,6 @@
 
 import {window, workspace, commands, ExtensionContext, QuickPickItem, InputBoxOptions} from 'vscode';
 import EscapeException from './utils/EscapeException';
-import runAsync from './utils/run-async';
 import Yeoman from './yo/yo';
 
 const path = require('path');
@@ -13,7 +12,10 @@ const opn = require('opn');
 export function activate(context: ExtensionContext) {
 	const cwd = workspace.rootPath;
 
-	const disposable = commands.registerCommand('yeoman', () => {
+	const yeomanCommand = 'yeoman.yeoman';
+	const yoCommand = 'yeoman.yo';
+
+	const commandHandler = () => {
 		if (!cwd) {
 			window.showErrorMessage('Please open a workspace directory first.');
 			return;
@@ -81,9 +83,10 @@ export function activate(context: ExtensionContext) {
 
 				window.showErrorMessage(err.message || err);
 			});
-	});
+	};
 
-	context.subscriptions.push(disposable);
+	context.subscriptions.push(commands.registerCommand(yeomanCommand, commandHandler));
+	context.subscriptions.push(commands.registerCommand(yoCommand, commandHandler));
 }
 
 function runSubGenerators(subGenerators: string[]) {

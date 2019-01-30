@@ -27,14 +27,19 @@
     "vscode": "^1.6.0"
   },
   "activationEvents": [
-    "onCommand:yeoman"
+    "onCommand:yeoman.yeoman",
+    "onCommand:yeoman.yo"
   ],
   "main": "./out/extension",
   "contributes": {
     "commands": [
       {
-        "command": "yeoman",
+        "command": "yeoman.yeoman",
         "title": "yeoman"
+      },
+      {
+        "command": "yeoman.yo",
+        "title": "yo"
       }
     ]
   },
