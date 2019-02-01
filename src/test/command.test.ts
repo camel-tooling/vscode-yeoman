@@ -31,8 +31,8 @@ describe("vscode/commands", () => {
 		});
 
 		it("works by entering yeoman or yo", () => {
-			vscode.commands.executeCommand("yeoman.yeoman")
-			vscode.commands.executeCommand("yeoman.yo")
+			vscode.commands.executeCommand("yeoman.yeoman");
+			vscode.commands.executeCommand("yeoman.yo");
 		});
 	});
 
