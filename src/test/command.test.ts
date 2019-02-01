@@ -4,6 +4,7 @@ import * as vscode from "vscode";
 import * as chai from "chai";
 import * as sinonChai from "sinon-chai";
 import * as sinon from "sinon";
+import * as assert from "assert";
 
 const expect = chai.expect;
 chai.use(sinonChai);
@@ -21,7 +22,7 @@ describe("vscode/commands", () => {
 		sandbox.restore();
 	});
 
-	describe("Yeoman and Yo", () => {
+	describe("Check commands are registered", () => {
 		before(() => {
 			inputStub.onFirstCall().returns("goonies");
 		});
@@ -30,10 +31,18 @@ describe("vscode/commands", () => {
 			inputStub.reset();
 		});
 
-		it("works by entering yeoman or yo", () => {
-			vscode.commands.executeCommand("yeoman.yeoman");
-			vscode.commands.executeCommand("yeoman.yo");
-		});
+		const commandRegistrationChecker = async (commandName: string) => {
+			try {
+				await vscode.commands.executeCommand(commandName);
+			} catch (error) {
+				assert.fail(error);
+			}
+		};
+
+		it("Check yeoman command is registered", () => commandRegistrationChecker("yeoman.yeoman"));
+
+		it("Check yo command is registered", () => commandRegistrationChecker("yeoman.yo"));
+
 	});
 
 });
