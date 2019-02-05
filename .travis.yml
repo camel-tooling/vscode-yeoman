@@ -19,14 +19,14 @@ after_success:
   - if [[ $TRAVIS_PULL_REQUEST == "false" && $TRAVIS_BRANCH == "master" ]]; then
     sonar-scanner;
     fi
-#deploy:
-#- provider: script
-#  script: vsce publish -p $VSCODE_TOKEN
-#  skip_cleanup: true
-#  on:
-#    repo: camel-tooling/vscode-yeoman
-#    branch: master
-#    tags: true
+deploy:
+- provider: script
+  script: vsce publish -p $VSCODE_TOKEN
+  skip_cleanup: true
+  on:
+    repo: camel-tooling/vscode-yeoman
+    branch: master
+    tags: true
 cache:
   directories:
     - "node_modules"
