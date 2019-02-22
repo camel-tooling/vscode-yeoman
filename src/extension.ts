@@ -1,92 +1,80 @@
 'use strict';
 
-import {window, workspace, commands, ExtensionContext, QuickPickItem, InputBoxOptions} from 'vscode';
+import * as vscode from 'vscode';
 import EscapeException from './utils/EscapeException';
 import Yeoman from './yo/yo';
+import * as figures from 'figures';
+import * as opn from 'opn';
 
-const path = require('path');
-const fs = require('fs');
-const figures = require('figures');
-const opn = require('opn');
+interface YeomanGeneratorQuickPickItem extends vscode.QuickPickItem {
+	subGenerators : any[];
+	id : string;
+}
 
-export function activate(context: ExtensionContext) {
-	const cwd = workspace.rootPath;
+async function handleCommand(): Promise<any> {
+	const cwd = vscode.workspace.rootPath;
+	if (!cwd) {
+		vscode.window.showErrorMessage('Please open a workspace directory first.');
+		return;
+	}
 
+	const yo = new Yeoman({cwd});
+	let main:any;
+	let sub:any;
+	const generatorList:vscode.QuickPickItem[] = await list(yo);
+
+	return Promise.resolve(vscode.window.showQuickPick(generatorList, 
+		{ 
+			placeHolder: 'Select one of the available Yeoman generators below.'
+		})).then((generator: any) => {
+			if (generator === undefined) {
+				throw new EscapeException();
+			}
+			main = generator.label;
+			if (generator.subGenerators.length > 1) {
+				return runSubGenerators(generator.subGenerators);
+			} else {
+				return 'app';
+			}
+		}).then(subGenerator => {
+			if (subGenerator === undefined) {
+				throw new EscapeException();
+			}
+			sub = subGenerator;
+			return yo.run(`${main}:${sub}`, cwd);
+		}).catch(err => {
+			const regexp = new RegExp('Did not provide required argument (.*?)!', 'i');
+			if (err) {
+				const match = err.message.match(regexp);
+				if (match) {
+					return `${sub} ${match[1]}?`;
+				}
+			}
+			throw err;
+		}).then((question: any) => {
+			return vscode.window.showInputBox({prompt: question})
+				.then(input => {
+					if (!input) {
+						throw new EscapeException();
+					}
+					return input;
+				});
+		}).then(argument => {
+			return yo.run(`${main}:${sub} ${argument}`, cwd);
+		}).catch(err => {
+			if (!err || err instanceof EscapeException) {
+				return;
+			}
+			vscode.window.showErrorMessage(err.message || err);
+		});
+}
+
+export function activate(context: vscode.ExtensionContext) {
 	const yeomanCommand = 'yeoman.yeoman';
 	const yoCommand = 'yeoman.yo';
 
-	const commandHandler = () => {
-		if (!cwd) {
-			window.showErrorMessage('Please open a workspace directory first.');
-			return;
-		}
-
-		const yo = new Yeoman({cwd});
-		let main;
-		let sub;
-
-		Promise.resolve(window.showQuickPick(list(yo), { 
-			placeHolder: 'Select one of the available Yeoman generators below.', 
-			ignoreFocusOut: true
-		})).then((generator: any) => {
-				if (generator === undefined) {
-					throw new EscapeException();
-				}
-
-				main = generator.label;
-
-				if (generator.subGenerators.length > 1) {
-					return runSubGenerators(generator.subGenerators);
-				} else {
-					return 'app';
-				}
-			})
-			.then(subGenerator => {
-				if (subGenerator === undefined) {
-					throw new EscapeException();
-				}
-
-				sub = subGenerator;
-
-				return yo.run(`${main}:${sub}`, cwd);
-			})
-			.catch(err => {
-				const regexp = new RegExp('Did not provide required argument (.*?)!', 'i');
-
-				if (err) {
-					const match = err.message.match(regexp);
-
-					if (match) {
-						return `${sub} ${match[1]}?`;
-					}
-				}
-
-				throw err;
-			})
-			.then((question: any) => {
-				return window.showInputBox({prompt: question})
-					.then(input => {
-						if (!input) {
-							throw new EscapeException();
-						}
-
-						return input;
-					});
-			})
-			.then(argument => {
-				return yo.run(`${main}:${sub} ${argument}`, cwd);
-			})
-			.catch(err => {
-				if (!err || err instanceof EscapeException) {
-					return;
-				}
-
-				window.showErrorMessage(err.message || err);
-			});
-	};
-
-	context.subscriptions.push(commands.registerCommand(yeomanCommand, commandHandler));
-	context.subscriptions.push(commands.registerCommand(yoCommand, commandHandler));
+	context.subscriptions.push(vscode.commands.registerCommand(yeomanCommand, handleCommand));
+	context.subscriptions.push(vscode.commands.registerCommand(yoCommand, handleCommand));
 }
 
 function runSubGenerators(subGenerators: string[]) {
@@ -98,43 +86,40 @@ function runSubGenerators(subGenerators: string[]) {
 		subGenerators.unshift(app);
 	}
 
-	return window.showQuickPick(subGenerators)
+	return vscode.window.showQuickPick(subGenerators)
 		.then(choice => {
 			if (choice === app) {
 				return 'app';
 			}
-
 			return choice;
 		});
 }
 
-function list(yo: Yeoman): Promise<QuickPickItem[]> {
+function list(yo: Yeoman): Promise<vscode.QuickPickItem[]> {
 	return new Promise((resolve, reject) => {
-		setImmediate(() => {
-			yo.getEnvironment().lookup(() => {
-				const generators = yo.getGenerators().map(generator => {
-					return {
-						label: generator.name.replace(/(^|\/)generator\-/i, '$1'),
-						description: generator.description,
-						subGenerators: generator.subGenerators
-					};
+		yo.getEnvironment().lookup(() => {
+			let generators: YeomanGeneratorQuickPickItem[] = [];
+			yo.getGenerators().forEach ( generator => {
+				generators.push( {
+					label: generator.name.replace(/(^|\/)generator\-/i, '$1'),
+					description: generator.description,
+					subGenerators: generator.subGenerators, 
+					id: generator.name
 				});
-
-				if (generators.length === 0) {
-					reject();
-
-					window.showInformationMessage('Make sure to install some generators first.', 'more info')
-						.then(choice => {
-							if (choice === 'more info') {
-								opn('http://yeoman.io/learning/');
-							}
-						});
-
-					return;
-				}
-
-				resolve(generators);
 			});
+
+			if (generators.length === 0) {
+				vscode.window.showInformationMessage('Make sure to install some generators first.', 'more info')
+					.then(choice => {
+						if (choice === 'more info') {
+							opn('http://yeoman.io/learning/');
+						}
+					});
+
+				reject();
+			}
+
+			resolve(generators);
 		});
 	});
 }
