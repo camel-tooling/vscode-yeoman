@@ -1,6 +1,6 @@
 {
   "name": "yo",
-  "version": "0.9.7",
+  "version": "0.9.8",
   "description": "Scaffold projects using Yeoman.",
   "license": "MIT",
   "publisher": "camel-tooling",
