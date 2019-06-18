@@ -15,7 +15,7 @@ install:
   # - 'npm run vscode:prepublish'
   - 'vsce package'
 script:
-  - 'npm test'
+  - 'npm test --silent'
 after_success:
   - if [[ $TRAVIS_PULL_REQUEST == "false" && $TRAVIS_BRANCH == "master" ]]; then
     sonar-scanner;
