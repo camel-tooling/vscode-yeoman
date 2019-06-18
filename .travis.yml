@@ -1,10 +1,9 @@
 language: node_js
 node_js: "10.15.0"
 os: linux
-services:
-  - xvfb
 before_install:
   - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
   - 'export PATH=./node_modules/.bin:$PATH'
   - 'npm install -g typescript'
   - 'npm install -g vsce'
@@ -16,7 +15,7 @@ install:
   - 'npm run vscode:prepublish'
   - 'vsce package'
 script:
-  - 'npm test --silent'
+  - 'npm test'
 after_success:
   - if [[ $TRAVIS_PULL_REQUEST == "false" && $TRAVIS_BRANCH == "master" ]]; then
     sonar-scanner;
