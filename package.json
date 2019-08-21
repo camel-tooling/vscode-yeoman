@@ -56,7 +56,7 @@
     "tslint": "gulp tslint"
   },
   "devDependencies": {
-    "@types/chai": "^4.1.7",
+    "@types/chai": "^4.2.0",
     "@types/lodash": "^4.14.134",
     "@types/mocha": "^5.2.7",
     "@types/node": "^12.0.8",
