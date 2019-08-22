@@ -61,7 +61,7 @@
     "@types/mocha": "^5.2.7",
     "@types/node": "^12.0.8",
     "@types/sinon": "^7.0.13",
-    "@types/sinon-chai": "^3.2.2",
+    "@types/sinon-chai": "^3.2.3",
     "chai": "^4.2.0",
     "gulp": "^4.0.2",
     "gulp-tslint": "^8.1.4",
