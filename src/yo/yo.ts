@@ -40,11 +40,11 @@ export default class Yeoman {
 			const name = key.split(':')[0];
 
 			const pkgPath = readPkgUp.sync({cwd: item.resolved});
-			if (!pkgPath.pkg) {
+			if (!pkgPath.package) {
 				return null;
 			}
 
-			const pkg = pkgPath.pkg;
+			const pkg = pkgPath.package;
 			const generatorVersion: any = pkg.dependencies['yeoman-generator'];
 			const generatorMeta: any = _.pick(pkg, 'name', 'version', 'description');
 
