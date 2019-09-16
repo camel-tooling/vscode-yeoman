@@ -37,13 +37,24 @@
     "commands": [
       {
         "command": "yeoman.yeoman",
-        "title": "yeoman"
+        "title": "Generate Yeoman",
+        "category": "Yeoman"
       },
       {
         "command": "yeoman.yo",
-        "title": "yo"
+        "title": "Yo",
+        "category": "Yeoman"
       }
-    ]
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "yeoman.yeoman",
+          "group": "navigation@50",
+          "when": "explorerResourceIsFolder"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",

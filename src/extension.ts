@@ -1,21 +1,19 @@
 'use strict';
 
-import {window, workspace, commands, ExtensionContext, QuickPickItem, InputBoxOptions} from 'vscode';
+import {window, workspace, commands, ExtensionContext, QuickPickItem, InputBoxOptions, Uri} from 'vscode';
 import EscapeException from './utils/EscapeException';
 import Yeoman from './yo/yo';
 
-const path = require('path');
-const fs = require('fs');
 const figures = require('figures');
 const opn = require('opn');
 
 export function activate(context: ExtensionContext) {
-	const cwd = workspace.rootPath;
 
 	const yeomanCommand = 'yeoman.yeoman';
 	const yoCommand = 'yeoman.yo';
 
-	const commandHandler = () => {
+	const commandHandler = (currentFolderUri?: Uri) => {
+		let cwd = currentFolderUri ? currentFolderUri.fsPath : workspace.rootPath;
 		if (!cwd) {
 			window.showErrorMessage('Please open a workspace directory first.');
 			return;

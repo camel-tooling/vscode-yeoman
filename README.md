@@ -6,7 +6,7 @@ This project is forked from the https://github.com/SamVerschueren/vscode-yo proj
 
 ## Usage
 
-Inside VS Code, press  `F1` or `Ctrl+Shift+P` to bring up the Command Palette, and type `yeoman` or just `yo`. When you hit Enter, you will be presented with a list of Yeoman generators that are installed and available for use. Once you select a generator, answer each of the questions it prompts for to complete the process.
+Inside VS Code, press  `F1` or `Ctrl+Shift+P` to bring up the Command Palette, and type `Generate Yeoman` or just `Yo` and hit Enter. Other option is to execute `Generate Yeoman` from any folder context menu. You will be presented with a list of Yeoman generators that are installed and available for use. Once you select a generator, answer each of the questions it prompts for to complete the process.
 
 ![](https://github.com/bfitzpat/vscode-yo/raw/master/media/yo.gif)
 
