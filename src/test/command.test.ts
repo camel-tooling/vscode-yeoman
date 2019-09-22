@@ -18,6 +18,7 @@ describe("vscode/commands", () => {
 	const commandRegistrationFailChecker = async (commandName: string) => {
 		// ensure that the command does not execute successfully
 		try {
+			console.log("commandRegistrationFailChecker");
 			await vscode.commands.executeCommand(commandName);
 			assert.fail('command exists');
 		} catch (error) {
@@ -25,13 +26,13 @@ describe("vscode/commands", () => {
 		}
 	};
 
-	describe("Yeoman and Yo", () => {
+	describe("Yeoman and Yo register", () => {
 
-		it("Check yeoman command is registered", () => commandRegistrationChecker("yeoman.yeoman"));
+		it("Check yeoman command is registered", async () => await commandRegistrationChecker("yeoman.yeoman"));
 
-		it("Check yo command is registered", () => commandRegistrationChecker("yeoman.yo"));
+		it("Check yo command is registered", async () => await commandRegistrationChecker("yeoman.yo"));
 
-		it("Check yoyo command is not registered", () => commandRegistrationFailChecker("yeoman.yoyo"));
+		it("Check yoyo command is not registered", async () => await commandRegistrationFailChecker("yeoman.yoyo"));
 	});
-
+	
 });

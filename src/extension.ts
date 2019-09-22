@@ -1,11 +1,11 @@
 'use strict';
 
-import {window, workspace, commands, ExtensionContext, QuickPickItem, InputBoxOptions, Uri} from 'vscode';
+import {window, workspace, commands, ExtensionContext, Uri} from 'vscode';
 import EscapeException from './utils/EscapeException';
 import Yeoman from './yo/yo';
+import listGenerators from './utils/list-generators';
 
 const figures = require('figures');
-const opn = require('opn');
 
 export function activate(context: ExtensionContext) {
 
@@ -23,7 +23,7 @@ export function activate(context: ExtensionContext) {
 		let main;
 		let sub;
 
-		Promise.resolve(window.showQuickPick(list(yo), { 
+		Promise.resolve(window.showQuickPick(listGenerators(yo), { 
 			placeHolder: 'Select one of the available Yeoman generators below.', 
 			ignoreFocusOut: true
 		})).then((generator: any) => {
@@ -62,6 +62,10 @@ export function activate(context: ExtensionContext) {
 				throw err;
 			})
 			.then((question: any) => {
+				// question provided only if argument is needed and calculated as a result of previous .catch call
+				if (question === undefined) {
+					throw new EscapeException();
+				}
 				return window.showInputBox({prompt: question})
 					.then(input => {
 						if (!input) {
@@ -106,33 +110,4 @@ function runSubGenerators(subGenerators: string[]) {
 		});
 }
 
-function list(yo: Yeoman): Promise<QuickPickItem[]> {
-	return new Promise((resolve, reject) => {
-		setImmediate(() => {
-			yo.getEnvironment().lookup(() => {
-				const generators = yo.getGenerators().map(generator => {
-					return {
-						label: generator.name.replace(/(^|\/)generator\-/i, '$1'),
-						description: generator.description,
-						subGenerators: generator.subGenerators
-					};
-				});
 
-				if (generators.length === 0) {
-					reject();
-
-					window.showInformationMessage('Make sure to install some generators first.', 'more info')
-						.then(choice => {
-							if (choice === 'more info') {
-								opn('http://yeoman.io/learning/');
-							}
-						});
-
-					return;
-				}
-
-				resolve(generators);
-			});
-		});
-	});
-}

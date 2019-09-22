@@ -1,5 +1,5 @@
 import * as util from 'util';
-import { window, OutputChannel, ViewColumn } from 'vscode';
+import { OutputChannel } from 'vscode';
 import PromptFactory from '../prompts/factory';
 import runAsync from '../utils/run-async';
 const logger = require('yeoman-environment/lib/util/log');
@@ -12,21 +12,12 @@ export default class CodeAdapter {
 	private outChannel: OutputChannel;
 	private outBuffer: string = '';
 
-	constructor() {
+	constructor(outChannel: OutputChannel) {
 		let self = this;
 
-		this.outChannel = window.createOutputChannel('Yeoman');
+		this.outChannel = outChannel;
 		this.outChannel.clear();
 		this.outChannel.show();
-
-		// TODO Do not overwrite these methods
-		console.error = console.log = function() {
-			const line = util.format.apply(util, arguments);
-
-			self.outBuffer += `${line}\n`;
-			self.outChannel.appendLine(line);
-			return this;
-		};
 
 		this.log.write = function() {
 			const line = util.format.apply(util, arguments);

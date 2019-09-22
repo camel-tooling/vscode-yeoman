@@ -74,6 +74,7 @@
     "@types/sinon": "^7.0.13",
     "@types/sinon-chai": "^3.2.3",
     "chai": "^4.2.0",
+    "generator-generator": "^4.0.2",
     "gulp": "^4.0.2",
     "gulp-tslint": "^8.1.4",
     "mocha": "^6.2.0",
