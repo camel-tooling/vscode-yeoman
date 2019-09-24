@@ -1,6 +1,5 @@
-import {window, StatusBarItem, StatusBarAlignment} from 'vscode';
+import {window, StatusBarItem, StatusBarAlignment, OutputChannel} from 'vscode';
 import {EOL} from 'os';
-import * as fs from 'fs';
 import * as _ from 'lodash';
 import createEnvironment from './environment';
 import EscapeException from '../utils/EscapeException';
@@ -13,14 +12,14 @@ const frame = elegantSpinner();
 
 export default class Yeoman {
 
-	private _options: any;
 	private _env: any;
 	private _status: StatusBarItem;
 	private _interval: any;
+	private outChannel: OutputChannel;
 
 	public constructor(options?: any) {
-		this._options = options;
-		this._env = createEnvironment(undefined, options);
+		this.outChannel = window.createOutputChannel('Yeoman');
+		this._env = createEnvironment(this.outChannel, undefined, options);
 		this._status = window.createStatusBarItem(StatusBarAlignment.Left);
 		this._interval;
 	}
@@ -53,7 +52,7 @@ export default class Yeoman {
 				return null;
 			}
 
-			// Flag generator to indecate if the generator version is fully supported or not.
+			// Flag generator to indicate if the generator version is fully supported or not.
 			// https://github.com/yeoman/yeoman-app/issues/16#issuecomment-121054821
 			generatorMeta.isCompatible = semver.ltr('0.17.6', generatorVersion);
 
@@ -92,39 +91,41 @@ export default class Yeoman {
 			generator = generator.slice(prefix.length);
 		}
 
-		return new Promise((resolve, reject) => {
-			Promise.resolve(window.showQuickPick(new Promise((res, rej) => {
-				setImmediate(() => {
-					try {
-						this._env.run(generator, this.done)
-							.on('npmInstall', () => {
-								this.setState('install node dependencies');
-							})
-							.on('bowerInstall', () => {
-								this.setState('install bower dependencies');
-							})
-							.on('error', err => {
-								if (!(err instanceof EscapeException)) {
-									window.showErrorMessage(err.message);
-									throw err;
-								}
-							})
-							.on('end', () => {
-								this.clearState();
-								console.log(`${EOL}${figures.tick} done`);
-							});
-
-						resolve();
-					} catch (err) {
-						reject(err);
-					}
-
-					rej();
-				});
-			}))).catch(err => {
-				// do nothing because the input is always rejected
+		// Generator.run API changed in yeoman-generator 3.0.0 
+		// (https://github.com/yeoman/generator/commit/4f3c6e873b05f4839370d10bade5448efdbe8d77)
+		// Before 3.0.0 it returned the generator instance and after 3.0.0 it returns a promise to the end of generation.
+		// We support both.
+		const generatorOrPromise = this._env.run(generator, this.done);
+		if (generatorOrPromise instanceof Promise) { // newer versions - generatorOrPromise is a promise
+			return generatorOrPromise.then(() => {
+				this.clearState();
+			}).catch((err: Error) => {
+				if (!(err instanceof EscapeException)) {
+					window.showErrorMessage(err.message);
+					throw err;
+				}
 			});
-		});
+		} else { // older versions - generatorOrPromise is instance of generator
+			return new Promise((resolve, reject) => {
+				generatorOrPromise
+					.on('npmInstall', () => {
+						this.setState('install node dependencies');
+					})
+					.on('bowerInstall', () => {
+						this.setState('install bower dependencies');
+					})
+					.on('error', (err: Error) => {
+						if (!(err instanceof EscapeException)) {
+							window.showErrorMessage(err.message);
+							reject(err);
+						}
+					})
+					.on('end', () => {
+						this.clearState();
+					});
+				resolve();
+			});
+		}
 	}
 
 	private setState(state: string) {
@@ -139,6 +140,7 @@ export default class Yeoman {
 	}
 
 	private clearState() {
+		this.outChannel.appendLine(`${EOL}${figures.tick} done`);
 		clearInterval(this._interval);
 		this._status.dispose();
 	}
