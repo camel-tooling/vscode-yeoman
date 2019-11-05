@@ -98,6 +98,6 @@
     "run-async": "^2.3.0",
     "semver": "^6.3.0",
     "strip-ansi": "^5.2.0",
-    "yeoman-environment": "^2.5.0"
+    "yeoman-environment": "^2.6.0"
   }
 }
