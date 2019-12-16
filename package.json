@@ -96,7 +96,7 @@
     "opn": "^6.0.0",
     "read-pkg-up": "^7.0.1",
     "run-async": "^2.3.0",
-    "semver": "^6.3.0",
+    "semver": "^7.0.0",
     "strip-ansi": "^6.0.0",
     "yeoman-environment": "^2.6.0"
   }
