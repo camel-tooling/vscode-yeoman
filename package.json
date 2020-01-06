@@ -79,7 +79,7 @@
     "gulp-tslint": "^8.1.4",
     "mocha": "^6.2.2",
     "sinon": "^7.5.0",
-    "sinon-chai": "^3.3.0",
+    "sinon-chai": "^3.4.0",
     "tslint": "^5.20.1",
     "typescript": "^3.7.4",
     "vscode": "^1.1.36"
