@@ -95,7 +95,7 @@
     "lodash": "^4.17.15",
     "opn": "^6.0.0",
     "read-pkg-up": "^7.0.1",
-    "run-async": "^2.3.0",
+    "run-async": "^2.4.0",
     "semver": "^7.1.3",
     "strip-ansi": "^6.0.0",
     "yeoman-environment": "^2.8.0"
