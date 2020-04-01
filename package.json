@@ -72,7 +72,7 @@
     "@types/mocha": "^7.0.2",
     "@types/node": "^13.9.8",
     "@types/sinon": "^9.0.0",
-    "@types/sinon-chai": "^3.2.3",
+    "@types/sinon-chai": "^3.2.4",
     "chai": "^4.2.0",
     "generator-generator": "^4.0.2",
     "gulp": "^4.0.2",
