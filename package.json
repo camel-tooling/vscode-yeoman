@@ -82,7 +82,7 @@
     "sinon-chai": "^3.5.0",
     "tslint": "^6.1.1",
     "typescript": "^3.8.3",
-    "vscode": "^1.1.36"
+    "vscode": "^1.1.37"
   },
   "dependencies": {
     "array-uniq": "^2.1.0",
