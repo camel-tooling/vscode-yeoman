@@ -1,4 +1,4 @@
-# vscode-yeoman [![GitHub tag](https://img.shields.io/github/tag/camel-tooling/vscode-yeoman.svg?style=plastic)]() [![Build Status](https://travis-ci.org/camel-tooling/vscode-yeoman.svg?branch=master)](https://travis-ci.org/camel-tooling/vscode-yeoman) [![License](https://img.shields.io/badge/license-MIT-green.svg)]()
+# vscode-yeoman [![GitHub tag](https://img.shields.io/github/tag/camel-tooling/vscode-yeoman.svg?style=plastic)]() [![Build Status](https://circleci.com/gh/redhat-developer/vscode-yeoman.svg?branch=master)](https://circleci.com/gh/redhat-developer/vscode-yeoman) [![License](https://img.shields.io/badge/license-MIT-green.svg)]()
 
 > Scaffold projects using [Yeoman](http://yeoman.io/).
 
