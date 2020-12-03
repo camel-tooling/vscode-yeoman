@@ -123,7 +123,7 @@ export default class Yeoman {
 					.on('end', () => {
 						this.clearState();
 					});
-				resolve();
+				resolve(null);
 			});
 		}
 	}
