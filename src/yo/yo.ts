@@ -10,6 +10,11 @@ const figures = require('figures');
 
 const frame = elegantSpinner();
 
+interface Options {
+	cwd: string;
+	outChannel: OutputChannel;
+}
+
 export default class Yeoman {
 
 	private _env: any;
@@ -17,9 +22,9 @@ export default class Yeoman {
 	private _interval: any;
 	private outChannel: OutputChannel;
 
-	public constructor(options?: any) {
-		this.outChannel = window.createOutputChannel('Yeoman');
-		this._env = createEnvironment(this.outChannel, undefined, options);
+	public constructor(options: Options) {
+		this.outChannel = options.outChannel;
+		this._env = createEnvironment(this.outChannel, undefined, {cwd: options.cwd});
 		this._status = window.createStatusBarItem(StatusBarAlignment.Left);
 		this._interval;
 	}
