@@ -1,6 +1,6 @@
 'use strict';
 
-import {window, workspace, commands, ExtensionContext, Uri} from 'vscode';
+import {window, workspace, commands, ExtensionContext, Uri, OutputChannel} from 'vscode';
 import EscapeException from './utils/EscapeException';
 import Yeoman from './yo/yo';
 import listGenerators from './utils/list-generators';
@@ -11,6 +11,7 @@ export function activate(context: ExtensionContext) {
 
 	const yeomanCommand = 'yeoman.yeoman';
 	const yoCommand = 'yeoman.yo';
+	const outChannel = window.createOutputChannel('Yeoman');
 
 	const commandHandler = (currentFolderUri?: Uri) => {
 		let cwd = currentFolderUri ? currentFolderUri.fsPath : workspace.rootPath;
@@ -19,7 +20,7 @@ export function activate(context: ExtensionContext) {
 			return;
 		}
 
-		const yo = new Yeoman({cwd});
+		const yo = new Yeoman({cwd, outChannel});
 		let main;
 		let sub;
 
@@ -27,6 +28,7 @@ export function activate(context: ExtensionContext) {
 			placeHolder: 'Select one of the available Yeoman generators below.', 
 			ignoreFocusOut: true
 		})).then((generator: any) => {
+				outChannel.show(true);
 				if (generator === undefined) {
 					throw new EscapeException();
 				}

@@ -16,8 +16,6 @@ export default class CodeAdapter {
 		let self = this;
 
 		this.outChannel = outChannel;
-		this.outChannel.clear();
-		this.outChannel.show();
 
 		this.log.write = function() {
 			const line = util.format.apply(util, arguments);
